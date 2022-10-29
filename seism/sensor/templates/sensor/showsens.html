@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css">
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.bundle.min.js"></script>
+<link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+<style>
+body {
+    background: #0083B0;
+    background: -webkit-linear-gradient(to right, #0083B0, #00B4DB);
+    background: linear-gradient(to right, #0083B0, #00B4DB);
+    min-height: 100vh;
+}
+
+.form-control::placeholder {
+    font-style: italic;
+    font-size: 0.85rem;
+    color: #aaa;
+}
+</style>
+
+</head>
+<body>
+<div class="container py-1">
+    <div class="row">
+        <div class="col-lg-7 mx-auto">
+            <div class="card rounded-0 border-0 shadow">
+                <div class="card-body p-5">
+                    
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">id</th>
+                                    <th scope="col">User</th>
+                                    <th scope="col">Sensor</th>
+                                    <th scope="col"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <h1>User name</h1>
+                                <a class="nav-item nav-link" href="{% url 'profile' %}">Профиль</a>
+                            </tbody>
+                        </table>
+                    </div>
+                    <a class="btn btn-primary rounded-0 btn-block" id="insertRow" href="#">Add new row</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div><div id="bcl"><a style="font-size:8pt;text-decoration:none;" href="http://www.devanswer.com">Free Frontend</a></div>
+
+<script>
+$(function () {
+    var counter;
+    $.ajax({
+        url: 'showsens',
+        success: function(data){
+            if(data.id != 'netu'){
+                for (var ind in data.user){
+                    var newRow = $("<tr>");
+                    var cols = '';
+                    cols += '<th scrope="row"><input class="form-control rounded-0" type="text" id="idx_' + data.id[ind] + '" placeholder="user" value="' + data.id[ind] + '"></th>';
+                    cols += '<th scope="col"><input class="form-control rounded-0" type="text" id="user_' + data.id[ind] + '" placeholder="user" value="' + data.user[ind] + '"></th>';
+                    cols += '<th scope="col"><input class="form-control rounded-0" type="text" id="sensor_' + data.id[ind] + '" placeholder="sensor" value="' + data.name[ind] + '"></th>';
+                    cols += '<td><button class="btn btn-danger rounded-0" id ="deleteRow" name= "' + data.id[ind] + '"><i class="fa fa-trash"></i></button</td>';                    
+                    newRow.append(cols);
+                    $("table").append(newRow);
+                    counter = data.id[ind] + 1;
+                }
+                counter = data.maxid + 1;
+            }
+            else{
+                counter = data.maxid + 1;
+            }
+        }
+    })
+
+    $("#insertRow").on("click", function (event) {
+        event.preventDefault();
+        $.ajax({
+            url: 'showsens',
+            type: 'GET',
+            success: function(data){
+                var newRow = $("<tr>");
+                var cols = '';
+                cols += '<th scrope="row"><input class="form-control rounded-0" type="text" id="idx_' + counter + '" placeholder="user" value="' + counter + '"></th>';
+                cols += '<th scope="col"><input class="form-control rounded-0" type="text" id="user_' + counter + '" placeholder="user" value="' + data.user[0] + '"></th>';
+                cols += '<th scope="col"><input class="form-control rounded-0" type="text" id="sensor_' + counter + '" placeholder="sensor"></th>';
+                cols += '<td><button class="btn btn-info rounded-0" id ="saveRow" name= "' + counter + '"><i class="fa fa-floppy-o" aria-hidden = "true"></i></button</td>';
+                cols += '<td><button class="btn btn-danger rounded-0" id ="deleteRow" name= "' + counter + '"><i class="fa fa-trash"></i></button</td>';
+
+                newRow.append(cols);
+                $("table").append(newRow);
+                counter++;
+            }
+        })
+    });
+
+    $("table").on("click", "#deleteRow", function (event) {
+        var iddxd = this.name;
+        var iidxd = document.getElementById('idx_' + iddxd).value;
+        var uuserd = document.getElementById('user_' + iddxd).value;
+        var ssensord = document.getElementById('sensor_' + iddxd).value;
+
+        $.ajax({
+            url: 'ajaxdel/',
+            type: 'POST',
+            data:{
+                name: ssensord,
+                user: uuserd,
+                id: iidxd,
+            },
+            success: function(data){ 
+            }
+        })
+        $(this).closest("tr").remove();
+    });
+
+    $("table").on("click", "#saveRow", function (event) {
+        var iddx = this.name;
+        var iidx = document.getElementById('idx_' + iddx).value;
+        var uuser = document.getElementById('user_' + iddx).value;
+        var ssensor = document.getElementById('sensor_' + iddx).value;
+        
+        $(this).closest("td").remove();
+
+        $.ajax({
+            url: 'ajaxpost/',
+            type: 'POST',
+            data:{
+                name: ssensor,
+                user: uuser,
+                id: iidx,
+            },
+            success: function(data){
+            }
+        })
+    });
+});
+</script>
+
+</body>
+</html>
