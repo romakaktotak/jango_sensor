@@ -38,6 +38,8 @@ body {
                                     <th scope="col">User</th>
                                     <th scope="col">Sensor</th>
                                     <th scope="col"></th>
+                                    <th scope="col"></th>
+                                    <th scope="col"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -51,7 +53,7 @@ body {
             </div>
         </div>
     </div>
-</div><div id="bcl"><a style="font-size:8pt;text-decoration:none;" href="http://www.devanswer.com">Free Frontend</a></div>
+</div>
 
 <script>
 $(function () {
@@ -66,7 +68,8 @@ $(function () {
                     cols += '<th scrope="row"><input class="form-control rounded-0" type="text" id="idx_' + data.id[ind] + '" placeholder="user" value="' + data.id[ind] + '"></th>';
                     cols += '<th scope="col"><input class="form-control rounded-0" type="text" id="user_' + data.id[ind] + '" placeholder="user" value="' + data.user[ind] + '"></th>';
                     cols += '<th scope="col"><input class="form-control rounded-0" type="text" id="sensor_' + data.id[ind] + '" placeholder="sensor" value="' + data.name[ind] + '"></th>';
-                    cols += '<td><button class="btn btn-danger rounded-0" id ="deleteRow" name= "' + data.id[ind] + '"><i class="fa fa-trash"></i></button</td>';                    
+                    cols += '<td><button class="btn btn-primary rounded-0" id ="ShowRow" name= "' + data.id[ind] + '"><i class="fa fa-ravelry" aria-hidden="true"></i></button</td>';
+                    cols += '<td><button class="btn btn-danger rounded-0" id ="deleteRow" name= "' + data.id[ind] + '"><i class="fa fa-trash"></i></button</td>';                      
                     newRow.append(cols);
                     $("table").append(newRow);
                     counter = data.id[ind] + 1;
@@ -91,8 +94,8 @@ $(function () {
                 cols += '<th scope="col"><input class="form-control rounded-0" type="text" id="user_' + counter + '" placeholder="user" value="' + data.user[0] + '"></th>';
                 cols += '<th scope="col"><input class="form-control rounded-0" type="text" id="sensor_' + counter + '" placeholder="sensor"></th>';
                 cols += '<td><button class="btn btn-info rounded-0" id ="saveRow" name= "' + counter + '"><i class="fa fa-floppy-o" aria-hidden = "true"></i></button</td>';
+                cols += '<td><button class="btn btn-primary rounded-0" id ="ShowRow" name= "' + counter + '"><i class="fa fa-ravelry" aria-hidden="true"></i></button</td>';
                 cols += '<td><button class="btn btn-danger rounded-0" id ="deleteRow" name= "' + counter + '"><i class="fa fa-trash"></i></button</td>';
-
                 newRow.append(cols);
                 $("table").append(newRow);
                 counter++;

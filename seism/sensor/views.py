@@ -13,7 +13,7 @@ def showsens(request):
     idx = []
     maxid = Sens.objects.latest('id').id
 
-    if request.user == 'roman':
+    if str(request.user) == 'roman':
         queryset = Sens.objects.all()
     else:
         queryset = Sens.objects.filter(ownuser = request.user)
@@ -42,13 +42,6 @@ def ajaxpost(request):
     name = request.POST.get('name')
     user = User.objects.get(username = request.POST.get('user'))
     id = request.POST.get('id')
-    print('################')
-    print('################')
-    print(name)
-    print(user)
-    print(id)
-    print('################')
-    print('################')
     Sens.objects.create(name = name, ownuser = user, id = id)
     return JsonResponse(data = {})
 
