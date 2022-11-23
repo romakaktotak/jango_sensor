@@ -3,9 +3,44 @@ from django.http import JsonResponse
 from .models import Sens
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
+from influxdb_client import InfluxDBClient, Point
+from influxdb_client.client.write_api import SYNCHRONOUS
+
+import os
+
 
 def startpage(request):
     return render(request, 'sensor/showsens.html')
+
+def sensplot(request, namesens):
+    return render(request, 'sensor/sensplot.html')
+
+def sensprepere(request):
+    bucket = request.headers['Referer'].split(sep='/', maxsplit=-1)[-2]
+    token = 'Jwy6P1S9gVVnfgFyT65-ov_KQrQFycgz7k7nlPtEYREIRvLizX0I8GFIFFekB9yiAKZKycfR51kHDL9ic6XVow=='
+    client = InfluxDBClient(url="http://localhost:8086", token=token, org="orn")
+    query_api = client.query_api()
+    
+    labels = []
+    data = []
+
+    query = 'from(bucket: "' + str(bucket) + '")\
+    |> range(start: -10000m)\
+    |> filter(fn: (r) => r._measurement == "measurement1")'
+    tables = query_api.query(query, org="orn")
+
+    i = 0 
+    for table in tables:
+        for record in table.records:
+            labels.append(i)
+            data.append(record.values['_value'])
+            i+=1
+
+    return JsonResponse(data={
+        'labels': labels,
+        'data': data,
+        'name':bucket,
+    })
 
 def showsens(request):
     name = []
